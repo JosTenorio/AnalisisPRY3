@@ -17,7 +17,7 @@ class Robot:
         self.cost = (battery * 100) + (motor * 100) + (camera * 100)
         self.progressMap = np.copy(MAP)
         self.progressMap[self.position[0], self.position[1]] = 5
-        print(self.progressMap)
+        self.printInfo()
 
     def move(self, moveX, moveY):
         x = self.position[0]
@@ -31,4 +31,8 @@ class Robot:
             self.position[0] += moveX
             self.position[1] += moveY
             self.progressMap[self.position[0], self.position[1]] = 5
+        self.printInfo()
+
+    def printInfo(self):
         print(self.progressMap)
+        print("Motor:", self.motor, "Battery:", self.battery, "Remaining:", self.batteryLeft, "Camera:", self.camera)
