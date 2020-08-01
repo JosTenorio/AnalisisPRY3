@@ -1,8 +1,8 @@
 import numpy as np
 
 # globals
-MAP = np.loadtxt("Terrain.txt", dtype='i', delimiter=',')
 ENERGY_COST = [0, 1, 2, 3]
+MAP = np.loadtxt("Terrain.txt", dtype='i', delimiter=',')
 
 class Robot:
 
@@ -15,6 +15,9 @@ class Robot:
         self.behaviour = behaviour
         self.batteryLeft = (battery * 60)
         self.cost = (battery * 100) + (motor * 100) + (camera * 100)
+        self.progressMap = np.copy(MAP)
+        self.progressMap[self.position[0], self.position[1]] = 5
+        print(self.progressMap)
 
     def move(self, moveX, moveY):
         x = self.position[0]
@@ -27,3 +30,5 @@ class Robot:
             self.batteryLeft -= movementCost
             self.position[0] += moveX
             self.position[1] += moveY
+            self.progressMap[self.position[0], self.position[1]] = 5
+        print(self.progressMap)
