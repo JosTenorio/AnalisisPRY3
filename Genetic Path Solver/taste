@@ -5,4 +5,7 @@ def sum_to_x(n, x):
     values.sort()
     return [values[i+1] - values[i] for i in range(n)]
 
-print (sum_to_x(5,1))
+x = sum_to_x(5,1)
+
+print (x)
+print (sum (x))

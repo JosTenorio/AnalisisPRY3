@@ -7,14 +7,17 @@ MAP = np.loadtxt("Terrain.txt", dtype='i', delimiter=',')
 
 class Robot(threading.Thread):
 
-    def __init__(self, battery, motor, camera, behaviour):
+    def __init__(self, battery, motor, camera, behaviour = []):
         threading.Thread.__init__(self)
         self.isRunning = True
         self.position = [19, 0]
         self.battery = battery
         self.motor = motor
         self.camera = camera
-        self.behaviour = behaviour
+        if behaviour:
+            self.behaviour = behaviour
+        else:
+            self.behaviour = fillRadomMarkovMatrix(108)
         self.batteryLeft = (battery * 60)
         self.cost = (battery * 100) + (motor * 100) + (camera * 100)
         self.progressMap = np.copy(MAP)
