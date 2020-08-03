@@ -10,13 +10,13 @@ NODES = [1111, 1112, 1113, 1114, 1121, 1122, 1123, 1124, 1131, 1132, 1133, 1134,
          2223, 2224, 2231, 2232, 2233, 2234, 2311, 2312, 2313, 2314, 2321, 2322, 2323, 2324, 2331, 2332, 2333, 2334,
          3111, 3112, 3113, 3114, 3121, 3122, 3123, 3124, 3131, 3132, 3133, 3134, 3211, 3212, 3213, 3214, 3221, 3222,
          3223, 3224, 3231, 3232, 3233, 3234, 3311, 3312, 3313, 3314, 3321, 3322, 3323, 3324, 3331, 3332, 3333, 3334]
+SIZE = len(NODES)
 
 def createRandomMarkovChain():
     markovChain = {}
-    size = len(NODES)
     for currentNode in NODES:
         markovChain[currentNode] = {}
-        values = sumToX(size, 1)
+        values = sumToX(SIZE, 1)
         counter = 0
         for nextNode in NODES:
             markovChain[currentNode][nextNode] = values[counter]

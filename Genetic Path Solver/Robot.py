@@ -11,7 +11,7 @@ class Robot(threading.Thread):
     def __init__(self, battery, motor, camera, behaviour):
         threading.Thread.__init__(self)
         self.isRunning = True
-        self.position = [19, 0]
+        self.position = [SIZE - 1, 0]
         self.battery = battery
         self.motor = motor
         self.camera = camera
@@ -37,6 +37,11 @@ class Robot(threading.Thread):
         self.printInfo()
 
     def run(self):
+        # get current node
+        # get next nodes
+        # select a node based on probability
+        # (to read arc probability use: self.behaviour[currentNode][nextNode])
+        # move
         pass
 
     def printInfo(self):
@@ -47,4 +52,20 @@ class Robot(threading.Thread):
         pp.pprint(self.behaviour)
 
     def getNextNodes(self):
-        pass
+        x = self.position[0]
+        y = self.position[1]
+        nodes = []
+        if y - 1 >= 0:
+            nodes += self.getNodeCode(x, y - 1, 1)
+        if y + 1 < SIZE:
+            nodes += self.getNodeCode(x, y + 1, 2)
+        if x - 1 >= 0:
+            nodes += self.getNodeCode(x - 1, y, 3)
+        if x + 1 < SIZE:
+            nodes += self.getNodeCode(x + 1, y, 4)
+        return nodes
+
+    def getNodeCode(self, x, y, direction):
+        terrain = MAP[x, y]
+        if terrain != 0 and terrain <= self.motor:
+            return [direction + (self.battery * 10) + (self.motor * 100) + (terrain * 1000)]
