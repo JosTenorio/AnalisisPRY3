@@ -1,0 +1,8 @@
+import numpy as np
+
+def sum_to_x(n, x):
+    values = [0.0, x] + list(np.random.uniform(low=0.0,high=x,size=n-1))
+    values.sort()
+    return [values[i+1] - values[i] for i in range(n)]
+
+print (sum_to_x(5,1))
