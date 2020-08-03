@@ -1,5 +1,6 @@
 import threading
 import pprint as pp
+from random import *
 from MarkovChain import *
 
 # globals
@@ -21,6 +22,7 @@ class Robot(threading.Thread):
         self.progressMap = np.copy(MAP)
         self.progressMap[self.position[0], self.position[1]] = 5
         self.printInfo()
+        self.currentNode = self.getNodeCode(self.position[0], self.position[1], 4)
 
     def move(self, moveX, moveY):
         x = self.position[0]
@@ -37,8 +39,25 @@ class Robot(threading.Thread):
         self.printInfo()
 
     def run(self):
-        # get current node
-        # get next nodes
+        possible_nodes = self.getNextNodes()
+        direction = 0
+        if len(possible_nodes) == 1:
+            direction = possible_nodes[0] % 10
+        else:
+            possible_nodes = sorted(possible_nodes)
+            probabilities_sum = 0
+            for node in possible_nodes:
+                probabilities_sum += self.behaviour[self.currentNode][node]
+            randomFloat = random.uniform(0, probabilities_sum)
+            for i in range(0,len (possible_nodes)):
+                if i == 0:
+                    if randomFloat in range (0,self.behaviour[self.currentNode][possible_nodes[i]]):
+                        direction = possible_nodes[0] % 10
+                        break
+                else:
+                    if randomFloat in range (self.behaviour[self.currentNode][possible_nodes[i - 1]], self.behaviour[self.currentNode][possible_nodes[i]]):
+                        direction = possible_nodes[i] % 10
+                        break
         # select a node based on probability
         # (to read arc probability use: self.behaviour[currentNode][nextNode])
         # move
