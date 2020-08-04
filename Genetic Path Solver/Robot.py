@@ -57,8 +57,10 @@ class Robot(threading.Thread):
                     probabilitySum += markovChain[node]
                 randomFloat = rand.uniform(0, probabilitySum)
                 accumulatedProbability = 0
+                print (probabilitySum)
+                print (randomFloat)
                 for node in possibleNodes:
-                    if accumulatedProbability <= randomFloat < markovChain[node]:
+                    if accumulatedProbability <= randomFloat < markovChain[node] + accumulatedProbability:
                         nextNode = node
                         break
                     else:
