@@ -1,13 +1,14 @@
-import random
+import random as rand
 from Robot import *
 
 def initPopulation(n):
     for i in range(n):
-        battery = random.randint(1, 3)
-        motor = random.randint(1, 3)
+        battery = rand.randint(1, 3)
+        motor = rand.randint(1, 3)
         camera = 1
         behaviour = createRandomMarkovChain()
-        robot = Robot(battery, motor, camera, behaviour)
+        robot = Robot(1, 1, 1, behaviour)
+        robot.start()
 
 # globals
 INITIAL_POPULATION = 1
