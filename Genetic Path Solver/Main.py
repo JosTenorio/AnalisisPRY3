@@ -1,16 +1,37 @@
-import random as rand
-from Robot import *
+from GeneticSelector import *
 
-def initPopulation(n):
-    for i in range(n):
-        battery = rand.randint(1, 3)
-        motor = rand.randint(1, 3)
-        camera = 1
-        behaviour = createRandomMarkovChain()
-        robot = Robot(1, 1, 1, behaviour)
-        robot.start()
+# Globals
 
-# globals
-INITIAL_POPULATION = 1
+# (Parameters)
+INITIAL_POPULATION = 50
+GENERATIONS = 5
+INDIVIDUALS_PER_CROSSOVER = 6
 
-initPopulation(INITIAL_POPULATION)
+# (Records)
+Generations = []
+
+
+#Main function
+def geneticAlgorithm (initialPopulation, generations, crossoverIndividuals):
+    for i in range(generations):
+        currentGeneration = []
+        previousGeneration = []
+        if i == 0:
+            currentGeneration = initGeneration(initialPopulation)
+        else:
+            previousGeneration = Generations[i-1]
+            # Generar currentGeneration a partir del cruce
+            #
+            #
+            #
+            #
+            #
+            currentGeneration = initGeneration(initialPopulation)
+        for robot in currentGeneration:
+            robot.start()
+        for robot in currentGeneration:
+            robot.join()
+        Generations.append(currentGeneration)
+
+#Main program
+geneticAlgorithm(INITIAL_POPULATION,GENERATIONS,INDIVIDUALS_PER_CROSSOVER)

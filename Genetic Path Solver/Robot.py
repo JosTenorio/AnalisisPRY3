@@ -18,12 +18,14 @@ class Robot(threading.Thread):
         self.motor = motor
         self.camera = camera
         self.behaviour = behaviour
-        self.batteryLeft = (battery * 6) #60
+        self.batteryLeft = (battery * )
         self.cost = (battery * 100) + (motor * 100) + (camera * 100)
         self.progressMap = np.copy(MAP)
         self.progressMap[self.position[0], self.position[1]] = 5
         self.currentNode = self.getNodeCode(self.position[0], self.position[1], 4)
-        self.printInfo()
+        self.adaptability = 0.0
+        self.moves = 0
+        self.printHardware()
 
     def move(self, moveRow, moveCol, newNode):
         row = self.position[0]
@@ -36,16 +38,16 @@ class Robot(threading.Thread):
             self.batteryLeft -= movementCost
             self.position[0] += moveRow
             self.position[1] += moveCol
+            self.moves += 1
             self.progressMap[self.position[0], self.position[1]] = 5
             self.currentNode = newNode
             if self.batteryLeft == 0 or (self.position[0] == 0 and self.position[1] == SIZE - 1):
                 self.isRunning = False
-        self.printInfo()
+        self.printAdaptability()
 
     def run(self):
         while self.isRunning:
             possibleNodes = self.getNextNodes()
-            print(possibleNodes)
             nextNode = None
             if len(possibleNodes) == 1:
                 nextNode = possibleNodes[0]
@@ -57,32 +59,29 @@ class Robot(threading.Thread):
                     probabilitySum += markovChain[node]
                 randomFloat = rand.uniform(0, probabilitySum)
                 accumulatedProbability = 0
-                print (probabilitySum)
-                print (randomFloat)
                 for node in possibleNodes:
                     if accumulatedProbability <= randomFloat < markovChain[node] + accumulatedProbability:
                         nextNode = node
                         break
                     else:
                         accumulatedProbability += markovChain[node]
-            if nextNode is not None:
-                direction = nextNode % 10
-                print("Direction", direction)
-                if direction == 1:
-                    self.move(-1, 0, nextNode)
-                elif direction == 2:
-                    self.move(1, 0, nextNode)
-                elif direction == 3:
-                    self.move(0, -1, nextNode)
-                else:
-                    self.move(0, 1, nextNode)
+            direction = nextNode % 10
+            if direction == 1:
+                self.move(-1, 0, nextNode)
+            elif direction == 2:
+                self.move(1, 0, nextNode)
+            elif direction == 3:
+                self.move(0, -1, nextNode)
             else:
-                print("NO NODE PICKED")
+                self.move(0, 1, nextNode)
 
+    def printHardware(self):
+        print("Motor: ", self.motor, "Battery: ", self.battery, "Remaining: ", self.batteryLeft, "Camera: ", self.camera)
+        print()
 
-    def printInfo(self):
+    def printAdaptability(self):
         print(self.progressMap)
-        print("Motor:", self.motor, "Battery:", self.battery, "Remaining:", self.batteryLeft, "Camera:", self.camera)
+        print("Moves taken: ", self.moves, "Cost: ", self.cost, "Adaptability: ", self.adaptability)
         print()
 
     def printMarkovChain(self):
