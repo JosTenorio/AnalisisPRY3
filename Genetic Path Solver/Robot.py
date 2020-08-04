@@ -24,7 +24,7 @@ class Robot(threading.Thread):
         self.printInfo()
         self.currentNode = self.getNodeCode(self.position[0], self.position[1], 4)
 
-    def move(self, moveX, moveY):
+    def move(self, moveX, moveY, newNode):
         x = self.position[0]
         y = self.position[1]
         movementCost = ENERGY_COST[MAP[x, y]]
@@ -36,31 +36,36 @@ class Robot(threading.Thread):
             self.position[0] += moveX
             self.position[1] += moveY
             self.progressMap[self.position[0], self.position[1]] = 5
+            self.currentNode = newNode
         self.printInfo()
 
     def run(self):
         possible_nodes = self.getNextNodes()
-        direction = 0
+        next_node = 0
         if len(possible_nodes) == 1:
-            direction = possible_nodes[0] % 10
+            next_node = possible_nodes[0]
         else:
             possible_nodes = sorted(possible_nodes)
             probabilities_sum = 0
             for node in possible_nodes:
                 probabilities_sum += self.behaviour[self.currentNode][node]
-            randomFloat = random.uniform(0, probabilities_sum)
-            for i in range(0,len (possible_nodes)):
-                if i == 0:
-                    if randomFloat in range (0,self.behaviour[self.currentNode][possible_nodes[i]]):
-                        direction = possible_nodes[0] % 10
-                        break
+            random_float = random.uniform(0, probabilities_sum)
+            accumulated_probability = 0
+            for i in range(0, len(possible_nodes)):
+                if random_float in range(accumulated_probability, self.behaviour[self.currentNode][possible_nodes[i]]):
+                    next_node = possible_nodes[i]
+                    break
                 else:
-                    if randomFloat in range (self.behaviour[self.currentNode][possible_nodes[i - 1]], self.behaviour[self.currentNode][possible_nodes[i]]):
-                        direction = possible_nodes[i] % 10
-                        break
-        # select a node based on probability
-        # (to read arc probability use: self.behaviour[currentNode][nextNode])
-        # move
+                    accumulated_probability += self.behaviour[self.currentNode][possible_nodes[i]]
+        direction = next_node % 10
+        if direction == 1:
+            self.move(0, 1, next_node)
+        elif direction == 2:
+            self.move(0, -1, next_node)
+        elif direction == 3:
+            self.move(1, 0, next_node)
+        else:
+            self.move(-1, 0, next_node)
         pass
 
     def printInfo(self):
