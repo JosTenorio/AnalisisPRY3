@@ -15,18 +15,11 @@ Generations = []
 def geneticAlgorithm (initialPopulation, generations, crossoverIndividuals):
     for i in range(generations):
         currentGeneration = []
-        previousGeneration = []
         if i == 0:
             currentGeneration = initGeneration(initialPopulation)
         else:
-            previousGeneration = Generations[i-1]
-            # Generar currentGeneration a partir del cruce
-            #
-            #
-            #
-            #
-            #
-            currentGeneration = initGeneration(initialPopulation)
+            selected = selection(Generations[i-1], crossoverIndividuals)
+            # Generar currentGeneration a partir de selected (individuos seleccionados)
         for robot in currentGeneration:
             robot.start()
         for robot in currentGeneration:
@@ -34,4 +27,3 @@ def geneticAlgorithm (initialPopulation, generations, crossoverIndividuals):
         Generations.append(currentGeneration)
 
 #Main program
-geneticAlgorithm(INITIAL_POPULATION,GENERATIONS,INDIVIDUALS_PER_CROSSOVER)

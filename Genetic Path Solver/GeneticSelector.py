@@ -1,5 +1,6 @@
 from Robot import *
-import math
+from operator import itemgetter
+
 
 
 def initGeneration(n):
@@ -14,42 +15,54 @@ def initGeneration(n):
     return generation
 
 
-#Adaptability:
-#Distance to exit: 50%
-# 0 = 50%, if robot is in entrance = 0%
 
-#Cost: 25%
-# 700 = 0%, 300 = 25%
+def adaptability(robot):
+    # Distance to exit: 50%
+    # param = 38 - <rows and columns of difference to exit>
+    # param = % -> 38 = 50%
 
-#Time (Moves taken): 25%
-# 0 = 25%
+    # Cost: 25%
+    # param = 700 - <cost>
+    # param = % -> 400 = 25%
 
-
-def adaptability (robot):
+    # Time (Moves taken, applies only if maze is solved): 25%
+    # param = 90 - <moves taken>
+    # param = % -> 90 = 25%
+    # 0 = 25%
     adaptability = 0.0
-    if robot.position[0] != SIZE -1 or robot.position[1] == 0:
-        if robot.position[0] == 0 and robot.position[1] == SIZE - 1:
-            adaptability += 50
-        else:
-            distanceToExit = math.sqrt()
+    if robot.position[0] != SIZE - 1 or robot.position[1] != 0:
+        difference = robot.position[0] + ((SIZE - 1) - robot.position[1])
+        adaptability += ((38 - difference) * 50) / 38
+    if robot.cost != 700:
+        adaptability += ((700 - robot.cost) * 25) / 400
+    if robot.position[0] == 0 and robot.position[1] == SIZE - 1:
+        if robot.moves != 90:
+            adaptability += ((90 - robot.moves) * 25) / 90
+    robot.adaptability = adaptability
     return adaptability
 
 
-
-
-
-def selection (generation, crossoverIndividuals):
-    populationLeft = generation
-    adaptabilities = []
+def selection(generation, crossoverIndividuals):
     selected = []
+    adaptabilities = []
+    totalAdaptability = 0.0
     for robot in generation:
         adaptability(robot)
-        adaptabilities.append(robot.adaptability)
+        totalAdaptability += robot.adaptability
+    avarageAdaptability = totalAdaptability / len(generation)
+    for robot in generation:
+        robot.adaptability = (robot.adaptability / avarageAdaptability) / len(generation)
+        adaptabilities.append(tuple(robot, robot.adaptability))
+    adaptabilities.sort(key=itemgetter(1))
     for i in range(crossoverIndividuals):
-        index = adaptabilities.index(max(adaptabilities))
-        selected.append(populationLeft[index])
-        populationLeft.pop(index)
-        adaptabilities.pop(index)
+        probability = rand.uniform(0, 1)
+        accumulatedProbability = 0.0
+        for tuple in adaptabilities:
+            if accumulatedProbability <= probability < tuple[1] + accumulatedProbability:
+                selected.append(tuple[0])
+                break
+            else:
+                accumulatedProbability += tuple[1]
     return selected
 
 

@@ -18,7 +18,7 @@ class Robot(threading.Thread):
         self.motor = motor
         self.camera = camera
         self.behaviour = behaviour
-        self.batteryLeft = (battery * )
+        self.batteryLeft = (battery * 30)
         self.cost = (battery * 100) + (motor * 100) + (camera * 100)
         self.progressMap = np.copy(MAP)
         self.progressMap[self.position[0], self.position[1]] = 5
