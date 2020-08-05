@@ -10,7 +10,7 @@ SIZE = len(MAP)
 
 class Robot(threading.Thread):
 
-    def __init__(self, battery, motor, camera, behaviour):
+    def __init__(self, battery, motor, camera, behaviour, parent1, parent2):
         threading.Thread.__init__(self)
         self.isRunning = True
         self.position = [SIZE - 1, 0]
@@ -23,9 +23,10 @@ class Robot(threading.Thread):
         self.progressMap = np.copy(MAP)
         self.progressMap[self.position[0], self.position[1]] = 5
         self.currentNode = self.getNodeCode(self.position[0], self.position[1], 4)
-        self.adaptability = 0.0
+        self.adaptability = -1.0
+        self.relativeAdaptability = -1.0
         self.moves = 0
-        self.printHardware()
+        self.parents = [parent1, parent2]
 
     def move(self, moveRow, moveCol, newNode):
         row = self.position[0]
@@ -42,8 +43,8 @@ class Robot(threading.Thread):
             self.progressMap[self.position[0], self.position[1]] = 5
             self.currentNode = newNode
             if self.batteryLeft == 0 or (self.position[0] == 0 and self.position[1] == SIZE - 1):
+                self.progressMap[self.position[0], self.position[1]] = 6
                 self.isRunning = False
-        self.printAdaptability()
 
     def run(self):
         while self.isRunning:
@@ -81,7 +82,7 @@ class Robot(threading.Thread):
 
     def printAdaptability(self):
         print(self.progressMap)
-        print("Moves taken: ", self.moves, "Cost: ", self.cost, "Adaptability: ", self.adaptability)
+        print("Moves taken: ", self.moves, "Cost: ", self.cost, "Adaptability: ", self.adaptability, "Relative adaptability: ", self.relativeAdaptability)
         print()
 
     def printMarkovChain(self):

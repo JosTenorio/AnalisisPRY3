@@ -10,7 +10,7 @@ def initGeneration(n):
         motor = rand.randint(1, 3)
         camera = 1
         behaviour = createRandomMarkovChain()
-        robot = Robot(battery, motor, camera, behaviour)
+        robot = Robot(battery, motor, camera, behaviour, None, None)
         generation.append(robot)
     return generation
 
@@ -28,36 +28,40 @@ def adaptability(robot):
     # Time (Moves taken, applies only if maze is solved): 25%
     # param = 90 - <moves taken>
     # param = % -> 90 = 25%
-    # 0 = 25%
-    adaptability = 0.0
+    #
+    # The minimum value of adaptability is 0.1
+    adaptabilityValue = 0.0
     if robot.position[0] != SIZE - 1 or robot.position[1] != 0:
         difference = robot.position[0] + ((SIZE - 1) - robot.position[1])
-        adaptability += ((38 - difference) * 50) / 38
+        adaptabilityValue += ((38 - difference) * 50) / 38
     if robot.cost != 700:
-        adaptability += ((700 - robot.cost) * 25) / 400
+        adaptabilityValue += ((700 - robot.cost) * 25) / 400
     if robot.position[0] == 0 and robot.position[1] == SIZE - 1:
         if robot.moves != 90:
-            adaptability += ((90 - robot.moves) * 25) / 90
-    robot.adaptability = adaptability
-    return adaptability
+            adaptabilityValue += ((90 - robot.moves) * 25) / 90
+    if adaptabilityValue == 0.0:
+        adaptabilityValue = 0.1
+    robot.adaptability = adaptabilityValue
 
 
 def selection(generation, crossoverIndividuals):
     selected = []
-    adaptabilities = []
+    relativeAdaptabilities = []
     totalAdaptability = 0.0
+    totalRelativeAdaptability = 0.0
     for robot in generation:
         adaptability(robot)
         totalAdaptability += robot.adaptability
     avarageAdaptability = totalAdaptability / len(generation)
     for robot in generation:
-        robot.adaptability = (robot.adaptability / avarageAdaptability) / len(generation)
-        adaptabilities.append(tuple(robot, robot.adaptability))
-    adaptabilities.sort(key=itemgetter(1))
+        robot.relativeAdaptability = (robot.adaptability / avarageAdaptability) / len(generation)
+        relativeAdaptabilities.append((robot, robot.relativeAdaptability))
+        totalRelativeAdaptability += robot.relativeAdaptability
+    relativeAdaptabilities.sort(key=itemgetter(1))
     for i in range(crossoverIndividuals):
-        probability = rand.uniform(0, 1)
+        probability = rand.uniform(0, totalRelativeAdaptability)
         accumulatedProbability = 0.0
-        for tuple in adaptabilities:
+        for tuple in relativeAdaptabilities:
             if accumulatedProbability <= probability < tuple[1] + accumulatedProbability:
                 selected.append(tuple[0])
                 break
@@ -65,4 +69,5 @@ def selection(generation, crossoverIndividuals):
                 accumulatedProbability += tuple[1]
     return selected
 
-
+def crossover (selected):
+    pass

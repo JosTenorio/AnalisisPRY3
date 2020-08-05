@@ -3,9 +3,9 @@ from GeneticSelector import *
 # Globals
 
 # (Parameters)
-INITIAL_POPULATION = 50
-GENERATIONS = 5
-INDIVIDUALS_PER_CROSSOVER = 6
+INITIAL_POPULATION = 10
+GENERATIONS = 2
+INDIVIDUALS_PER_CROSSOVER = 3
 
 # (Records)
 Generations = []
@@ -19,11 +19,13 @@ def geneticAlgorithm (initialPopulation, generations, crossoverIndividuals):
             currentGeneration = initGeneration(initialPopulation)
         else:
             selected = selection(Generations[i-1], crossoverIndividuals)
-            # Generar currentGeneration a partir de selected (individuos seleccionados)
-        for robot in currentGeneration:
-            robot.start()
-        for robot in currentGeneration:
-            robot.join()
+            currentGeneration = selected #Generar la generacion nueva (currentGeneration) a partir de los seleccionados
+        if i != generations - 1:
+            for robot in currentGeneration:
+                robot.start()
+            for robot in currentGeneration:
+                robot.join()
         Generations.append(currentGeneration)
 
 #Main program
+geneticAlgorithm (INITIAL_POPULATION, GENERATIONS, INDIVIDUALS_PER_CROSSOVER)
