@@ -7,6 +7,11 @@ from MarkovChain import *
 ENERGY_COST = [0, 1, 2, 3]
 MAP = np.loadtxt("Terrain.txt", dtype = 'i', delimiter = ',')
 SIZE = len(MAP)
+CAMERA_UNITS = 1
+BATTERY_UNITS = 3
+MOTOR_UNITS = 3
+BATTERY_PER_UNIT = 50
+COST_PER_HARDWARE = 100
 
 class Robot(threading.Thread):
 
@@ -18,13 +23,13 @@ class Robot(threading.Thread):
         self.motor = motor
         self.camera = camera
         self.behaviour = behaviour
-        self.batteryLeft = (battery * 30)
-        self.cost = (battery * 100) + (motor * 100) + (camera * 100)
+        self.batteryLeft = (battery * BATTERY_PER_UNIT)
+        self.cost = (battery * COST_PER_HARDWARE) + (motor * COST_PER_HARDWARE) + (camera * COST_PER_HARDWARE)
         self.progressMap = np.copy(MAP)
         self.progressMap[self.position[0], self.position[1]] = 5
         self.currentNode = self.getNodeCode(self.position[0], self.position[1], 4)
-        self.adaptability = -1.0
-        self.relativeAdaptability = -1.0
+        self.adaptability = 0.0
+        self.relativeAdaptability = 0.0
         self.moves = 0
         self.parents = [parent1, parent2]
 
@@ -40,10 +45,9 @@ class Robot(threading.Thread):
             self.position[0] += moveRow
             self.position[1] += moveCol
             self.moves += 1
-            self.progressMap[self.position[0], self.position[1]] = 5
             self.currentNode = newNode
+            self.progressMap[self.position[0], self.position[1]] = 5
             if self.batteryLeft == 0 or (self.position[0] == 0 and self.position[1] == SIZE - 1):
-                self.progressMap[self.position[0], self.position[1]] = 6
                 self.isRunning = False
 
     def run(self):
@@ -77,12 +81,15 @@ class Robot(threading.Thread):
                 self.move(0, 1, nextNode)
 
     def printHardware(self):
+        self.progressMap[self.position[0], self.position[1]] = 6
+        print(self.progressMap)
         print("Motor: ", self.motor, "Battery: ", self.battery, "Remaining: ", self.batteryLeft, "Camera: ", self.camera)
         print()
 
     def printAdaptability(self):
+        self.progressMap[self.position[0], self.position[1]] = 6
         print(self.progressMap)
-        print("Moves taken: ", self.moves, "Cost: ", self.cost, "Adaptability: ", self.adaptability, "Relative adaptability: ", self.relativeAdaptability)
+        print("Moves: ", self.moves, "Cost: ", self.cost, "Adaptability: ", self.adaptability, "Relative adaptability: ", self.relativeAdaptability)
         print()
 
     def printMarkovChain(self):
