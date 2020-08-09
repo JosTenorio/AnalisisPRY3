@@ -26,33 +26,38 @@ def initGeneration(n):
 
 # The minimum value of adaptability is 0.1
 
-def adaptability(robot):
+def adaptability(robot): #CHECK HARDCODED NUMBERS
     adaptabilityValue = 0.0
     maxCost = COST_PER_HARDWARE * (BATTERY_UNITS + MOTOR_UNITS + CAMERA_UNITS)
     minCost = COST_PER_HARDWARE * HARDWARE_COMPONENTS
     maxMoves = BATTERY_PER_UNIT * BATTERY_UNITS
-    minMoves = BATTERY_PER_UNIT * max(ENERGY_COST)
+    positionValue = 60
+    costValue = 20
+    timeValue = 20
     if robot.position[0] != SIZE - 1 and robot.position[1] != 0:
         difference = robot.position[0] + ((SIZE - 1) - robot.position[1])
-        adaptabilityValue += ((38 - difference) * 50) / 38
+        adaptabilityValue += ((38 - difference) * positionValue) / 38
     if robot.cost < maxCost:
-        adaptabilityValue += ((maxCost - robot.cost) * 25) / minCost
+        adaptabilityValue += ((maxCost - robot.cost) * costValue) / minCost
     if robot.position[0] == 0 and robot.position[1] == SIZE - 1:
         if robot.moves < maxMoves:
-            adaptabilityValue += ((maxMoves - robot.moves) * 25) / minMoves
+            adaptabilityValue += ((maxMoves - robot.moves) * timeValue) / 90
     if adaptabilityValue == 0.0:
         adaptabilityValue = 0.1
     robot.adaptability = adaptabilityValue
 
-def selection(generation):
-    selected = []
-    relativeAdaptabilities = []
-    population = len(generation)
+def evaluate(generation):
     totalAdaptability = 0.0
-    totalRelativeAdaptability = 0.0
     for robot in generation:
         adaptability(robot)
         totalAdaptability += robot.adaptability
+    return totalAdaptability
+
+def selection(generation, totalAdaptability):
+    selected = []
+    relativeAdaptabilities = []
+    population = len(generation)
+    totalRelativeAdaptability = 0.0
     avarageAdaptability = totalAdaptability / population
     for robot in generation:
         robot.relativeAdaptability = (robot.adaptability / avarageAdaptability) / population
@@ -70,9 +75,9 @@ def selection(generation):
                 accumulatedProbability += robotAdaptability[1]
     return selected
 
-def crossGeneration(generation):
+def crossGeneration(generation, totalAdaptability, mutationProbability):
     newGeneration = []
-    selected = selection(generation)
+    selected = selection(generation, totalAdaptability)
     rand.shuffle(selected)
     for i in range(0, len(selected), 2):
         robotMale = selected[i]
@@ -82,12 +87,23 @@ def crossGeneration(generation):
         else:
             robotFemale = selected[i + 1]
         femaleGenes = [robotFemale.motor, robotFemale.battery, robotFemale.camera, robotFemale.behaviour]
-        crossPoint = rand.randint(1, HARDWARE_COMPONENTS)
+        crossPoint = rand.randint(0, HARDWARE_COMPONENTS - 1)
         for j in range(crossPoint):
             swap = maleGenes[j]
             maleGenes[j] = femaleGenes[j]
             femaleGenes[j] = swap
+        crossMarkovChains(maleGenes[3], femaleGenes[3], mutationProbability)
         newGeneration.append(Robot(maleGenes[0], maleGenes[1], maleGenes[2], maleGenes[3], robotMale, robotFemale))
         newGeneration.append(Robot(femaleGenes[0], femaleGenes[1], femaleGenes[2], femaleGenes[3], robotMale, robotFemale))
     return newGeneration
-#mutation
+#mutate hardware
+
+def crossMarkovChains(maleChain, femaleChain, mutationProbability):
+    crossPoint = rand.randint(1, NODE_AMOUNT - 1)
+    for i in range(crossPoint):
+        swap = maleChain[NODES[i]]
+        maleChain[NODES[i]] = femaleChain[NODES[i]]
+        femaleChain[NODES[i]] = swap
+
+
+
