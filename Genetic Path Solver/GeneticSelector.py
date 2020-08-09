@@ -26,14 +26,16 @@ def initGeneration(n):
 
 # The minimum value of adaptability is 0.1
 
-def adaptability(robot): #CHECK HARDCODED NUMBERS
+def adaptability(robot):
+    #CHECK HARDCODED NUMBERS
+    # apply cost and time only when position score is very high
     adaptabilityValue = 0.0
     maxCost = COST_PER_HARDWARE * (BATTERY_UNITS + MOTOR_UNITS + CAMERA_UNITS)
     minCost = COST_PER_HARDWARE * HARDWARE_COMPONENTS
     maxMoves = BATTERY_PER_UNIT * BATTERY_UNITS
-    positionValue = 60
-    costValue = 20
-    timeValue = 20
+    positionValue = 80
+    costValue = 10
+    timeValue = 10
     if robot.position[0] != SIZE - 1 and robot.position[1] != 0:
         difference = robot.position[0] + ((SIZE - 1) - robot.position[1])
         adaptabilityValue += ((38 - difference) * positionValue) / 38
@@ -87,16 +89,18 @@ def crossGeneration(generation, totalAdaptability, mutationProbability):
         else:
             robotFemale = selected[i + 1]
         femaleGenes = [robotFemale.motor, robotFemale.battery, robotFemale.camera, robotFemale.behaviour]
-        crossPoint = rand.randint(0, HARDWARE_COMPONENTS - 1)
-        for j in range(crossPoint):
-            swap = maleGenes[j]
-            maleGenes[j] = femaleGenes[j]
-            femaleGenes[j] = swap
+        crossHardware(maleGenes, femaleGenes, mutationProbability)
         crossMarkovChains(maleGenes[3], femaleGenes[3], mutationProbability)
         newGeneration.append(Robot(maleGenes[0], maleGenes[1], maleGenes[2], maleGenes[3], robotMale, robotFemale))
         newGeneration.append(Robot(femaleGenes[0], femaleGenes[1], femaleGenes[2], femaleGenes[3], robotMale, robotFemale))
     return newGeneration
-#mutate hardware
+
+def crossHardware(maleGenes, femaleGenes, mutationProbability):
+    crossPoint = rand.randint(0, HARDWARE_COMPONENTS - 1)
+    for j in range(crossPoint):
+        swap = maleGenes[j]
+        maleGenes[j] = femaleGenes[j]
+        femaleGenes[j] = swap
 
 def crossMarkovChains(maleChain, femaleChain, mutationProbability):
     crossPoint = rand.randint(1, NODE_AMOUNT - 1)

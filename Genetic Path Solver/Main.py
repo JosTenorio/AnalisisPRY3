@@ -19,7 +19,7 @@ def mazeSolver():
 
 # Globals
 INITIAL_POPULATION = 20
-GENERATIONS = 50 # change to while true
+GENERATIONS = 100 # change to while true
 MUTATION_PROBABILITY = 0.0
 GEN_COUNT = 0
 ARCHIVE = []
