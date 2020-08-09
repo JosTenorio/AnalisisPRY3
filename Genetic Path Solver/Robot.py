@@ -12,15 +12,16 @@ BATTERY_UNITS = 3
 MOTOR_UNITS = 3
 BATTERY_PER_UNIT = 50
 COST_PER_HARDWARE = 100
+HARDWARE_COMPONENTS = 3
 
 class Robot(threading.Thread):
 
-    def __init__(self, battery, motor, camera, behaviour, parent1, parent2):
+    def __init__(self, motor, battery, camera, behaviour, parent1, parent2):
         threading.Thread.__init__(self)
         self.isRunning = True
         self.position = [SIZE - 1, 0]
-        self.battery = battery
         self.motor = motor
+        self.battery = battery
         self.camera = camera
         self.behaviour = behaviour
         self.batteryLeft = (battery * BATTERY_PER_UNIT)
@@ -80,22 +81,6 @@ class Robot(threading.Thread):
             else:
                 self.move(0, 1, nextNode)
 
-    def printHardware(self):
-        self.progressMap[self.position[0], self.position[1]] = 6
-        print(self.progressMap)
-        print("Motor: ", self.motor, "Battery: ", self.battery, "Remaining: ", self.batteryLeft, "Camera: ", self.camera)
-        print()
-
-    def printAdaptability(self):
-        self.progressMap[self.position[0], self.position[1]] = 6
-        print(self.progressMap)
-        print("Moves: ", self.moves, "Cost: ", self.cost, "Adaptability: ", self.adaptability, "Relative adaptability: ", self.relativeAdaptability)
-        print()
-
-    def printMarkovChain(self):
-        pp.pprint(self.behaviour)
-        print()
-
     def getNextNodes(self):
         row = self.position[0]
         col = self.position[1]
@@ -123,3 +108,14 @@ class Robot(threading.Thread):
         if terrain != 0 and terrain <= self.motor:
             return [direction + (self.battery * 10) + (self.motor * 100) + (terrain * 1000)]
         return None
+
+    def printInfo(self):
+        self.progressMap[self.position[0], self.position[1]] = 6
+        print(self.progressMap)
+        print("Motor:", self.motor, "Battery:", self.battery, "Remaining:", self.batteryLeft, "Camera:", self.camera)
+        print("Moves:", self.moves, "Cost:", self.cost, "Adaptability:", self.adaptability, "Relative:", self.relativeAdaptability)
+        print()
+
+    def printMarkovChain(self):
+        pp.pprint(self.behaviour)
+        print()

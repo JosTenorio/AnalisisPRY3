@@ -14,13 +14,14 @@ def mazeSolver():
 
 def printResults():
     for gen in ARCHIVE:
+        print("NEXT GEN")
+        print()
         for robot in gen:
-            robot.printHardware()
+            robot.printInfo()
 
 # Globals
-INITIAL_POPULATION = 1
-GENERATIONS = 1
-INDIVIDUALS_PER_CROSSOVER = 0
+INITIAL_POPULATION = 20
+GENERATIONS = 100
 ARCHIVE = []
 
 mazeSolver()
