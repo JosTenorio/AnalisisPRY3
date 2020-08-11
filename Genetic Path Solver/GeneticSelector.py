@@ -1,6 +1,13 @@
 from Robot import *
 from operator import itemgetter
 
+#globals
+BEST_SCORE = 0
+BEST_ROBOT = None
+
+def getBestRobot():
+    return BEST_ROBOT
+
 def initGeneration(n):
     generation = []
     for i in range(n):
@@ -36,9 +43,13 @@ def adaptability(robot):
     robot.adaptability = adaptabilityValue
 
 def evaluate(generation):
+    global BEST_SCORE, BEST_ROBOT
     totalAdaptability = 0.0
     for robot in generation:
         adaptability(robot)
+        if robot.adaptability > BEST_SCORE:
+            BEST_SCORE = robot.adaptability
+            BEST_ROBOT = robot
         totalAdaptability += robot.adaptability
     return totalAdaptability
 
@@ -120,4 +131,3 @@ def mutateMarkovChain(chain, mutationProbability):
         for nextNode in NODES:
             chain[mutation][nextNode] = values[counter]
             counter += 1
-
