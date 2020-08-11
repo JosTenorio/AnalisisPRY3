@@ -26,27 +26,30 @@ COLOR_YELLOW = (255,215,0)
 COLOR_RED = (220,20,60)
 COLOR_BLUE = (30,144,255)
 COLOR_PURPLE = (147,112,219)
+COLOR_BROWN = (205,133,63)
 
-class button:
+# fonts
+FONT = "arial"
 
-    def __init__(self, color, x, y, width, height, font, textSize, text = ''):
+class Button:
+
+    def __init__(self, color, x, y, width, height, textSize, text = ''):
         self.color = color
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.text = text
-        self.font = font
         self.textSize = textSize
 
-    def draw(self, win, outline = None):
+    def draw(self, outline = None):
         if outline:
-            py.draw.rect(win, outline, (self.x - 2, self.y - 2, self.width + 4, self.height + 4), 0)
-        py.draw.rect(win, self.color, (self.x, self.y, self.width, self.height), 0)
+            py.draw.rect(WINDOW, outline, (self.x - 2, self.y - 2, self.width + 4, self.height + 4), 0)
+        py.draw.rect(WINDOW, self.color, (self.x, self.y, self.width, self.height), 0)
         if self.text != '':
-            font = py.font.SysFont(self.font, self.textSize)
+            font = py.font.SysFont(FONT, self.textSize)
             text = font.render(self.text, 1, (0, 0, 0))
-            win.blit(text, (self.x + (self.width / 2 - text.get_width() / 2), self.y + (self.height / 2 - text.get_height() / 2)))
+            WINDOW.blit(text, (self.x + (self.width / 2 - text.get_width() / 2), self.y + (self.height / 2 - text.get_height() / 2)))
 
     def isOver(self, pos):
         if self.x < pos[0] < self.x + self.width:

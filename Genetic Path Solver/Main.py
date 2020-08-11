@@ -18,9 +18,10 @@ def pathSolver():
         GRAPH = plot(GEN_NUMBERS, ADAPTABILITY_ARCHIVE, "b")
         if RUNNING:
             currentGeneration = crossGeneration(currentGeneration, totalAdaptability, MUTATION_PROBABILITY_HARDWARE, MUTATION_PROBABILITY_BEHAVIOUR)
+    reset()
 
 def reset():
-    pass
+    print("settings reset")
 
 def start():
     solverThread.start()
@@ -38,7 +39,10 @@ RUNNING = True
 
 # thread setup
 solverThread = threading.Thread(target = pathSolver, daemon = True)
-start()
+
+# buttons
+startButton = Button(COLOR_BROWN, 250, 30, 80, 40, 20, "START")
+stopButton = Button(COLOR_BROWN, 250, 90, 80, 40, 20, "STOP")
 
 while True:
 
@@ -47,9 +51,19 @@ while True:
         if event.type == py.QUIT:
             sys.exit()
 
+        if event.type == py.MOUSEBUTTONDOWN:
+            pos = py.mouse.get_pos()
+            if startButton.isOver(pos):
+                start()
+            elif stopButton.isOver(pos):
+                RUNNING = False
+
     WINDOW.fill(COLOR_CREAM)
 
     drawMatrix(MAP, 30, 30, 10)
+
+    startButton.draw(COLOR_BLACK)
+    stopButton.draw(COLOR_BLACK)
 
     if GRAPH is not None:
         WINDOW.blit(GRAPH, (630, 250))
