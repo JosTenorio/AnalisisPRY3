@@ -73,24 +73,27 @@ En cuanto al cruce, este se realiza independientemente para la sección de los g
 Una vez diseñadas todas las secciones del algoritmo, se programó una interfaz gráfica que permitiera visualizar el la adaptabilidad total (no la adaptabilidad relativa) alcanzada respecto a la cantidad de generaciones creadas hasta el momento. Además, dicha interfaz da la posibilidad de ver el robot con la mayor adaptabilidad alcanzada, así como visualizar el linaje de cualquier robot dado y detener la creación de nuevas generaciones cuando se desee.
 \section{Análisis de resultados}
 
-Se realizaron múltiples 
+Se realizaron m´ultiples corridas del algoritmo con una poblaci´on de 50 robots en cada generación y una probabilidad de mutación de 1 entre 100000 para tanto la mutacion de hardware como la de comportamiento. En Fig. 2 se puede apreciar uno ejemplo del resultado m´as com´un obtenido en las pruebas: la obtenci´on de una adaptabilidad total de alrededor de 2700 a partir de centesima generaci´on o antes. El estanque enunaadaptabilidadtotalde2700sedebealaconvergenciade genes alrededor de un ejemplar cuya adaptabilidad ronda los 60 puntos, en cuyo momento se entiende que se ha encontrado una soluci´on optima, mas aun tomando en cuenta que la adaptabilidad total de las primeras generaciones rondaba los 600 puntos.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.68]{Resultado2.png}}
-\caption{Matriz que representa el laberinto usado}
+\centerline{\includegraphics[scale=0.25]{Resultado1.png}}
+\caption{Corrida con 100 generaciones}
 \label{Imagen de referencia}
 \end{figure}
 
+No obstante, un aspecto que si varıo considerablemente entre corridas es la cantidad de generaciones que tomaba alcanzar el resultado de aproximadamente 3000 puntos de adabtabilidad total. En la Fig. 3 se puede apreciar un caso en el que tan pronto como a partir de la d´ecimo segunda generaci´on se alcanzaba dicha adaptabilidad, con la solucion mas optima correspondiendo a un robot con 80 de adaptabilidad.
 
 \begin{figure}[htbp]
-\centerline{\includegraphics[scale=0.68]{Resultado1.png}}
-\caption{Renderización completa con 50 muestras. Tiempo de ejecución: 16 minutos con 20 segundos.}
+\centerline{\includegraphics[scale=0.25]{Resultado2.png}}
+\caption{Corrida con 160 generaciones}
 \label{50 muestras completo}
 \end{figure}
 
+Cabe mencionar que, por medio de las pruebas aqui mostradas, se considera que queda probado el correcto funcionamiento del algoritmo gen´etico en la tarea de encontrar soluciones con un aproximado de 80 puntos de adaptabilidad.
 
 \section{Conclusión}
 
+Se concluye que se diseño satisfactoriamente un algoritmo genético capaz de dar una solucion óptima al problema dado, adicionalmente se cumplió con el objetivo de proveer al usuario una interfaz gráfica amigable para ver los datos de  la corrida de algoritmo. El únic punto negativo al desarrollo del proyecto queda como la falta de la inforporación de la cámara a los genes de las soluciones.
 
 \section{Acceso al proyecto}
 El repositorio de GitHub en el cual se ubican todos los archivos empleados para el desarrollo de este proyecto puede ser accesado mediante el siguiente link: \url{https://github.com/TilapiaBoi/AnalisisPRY3}
