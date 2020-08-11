@@ -65,12 +65,18 @@ while True:
     startButton.draw(COLOR_BLACK)
     stopButton.draw(COLOR_BLACK)
 
+    drawText("BEST RESULT:", 20, 250, 150)
+
     if GRAPH is not None:
         WINDOW.blit(GRAPH, (630, 250))
 
     bestRobot = getBestRobot()
     if bestRobot is not None:
         drawMatrix(bestRobot.progressMap, 30, 250, 25)
+        infoHardware = bestRobot.getInfoHardware()
+        infoAdaptability = bestRobot.getInfoAdaptability()
+        drawText(infoHardware, 20, 250, 180)
+        drawText(infoAdaptability, 20, 250, 210)
 
     py.display.flip()
     CLOCK.tick(60)
