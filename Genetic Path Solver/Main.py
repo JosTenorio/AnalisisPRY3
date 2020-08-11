@@ -54,7 +54,9 @@ solverThread = threading.Thread(target = pathSolver, daemon = True)
 # buttons
 startButton = Button(COLOR_BROWN, 250, 30, 80, 40, 20, "START")
 stopButton = Button(COLOR_BROWN, 250, 90, 80, 40, 20, "STOP")
-cycleButton = Button(COLOR_BROWN, 850, 30, 180, 40, 20, "CYCLE GENERATION")
+cycleButton = Button(COLOR_BROWN, 850, 40, 180, 40, 20, "CYCLE GENERATION")
+parent1Button = Button(COLOR_BROWN, 850, 100, 180, 40, 20, "PARENT 1")
+parent2Button = Button(COLOR_BROWN, 850, 160, 180, 40, 20, "PARENT 2")
 
 while True:
 
@@ -76,6 +78,16 @@ while True:
                     else:
                         SELECTED_ROB_INDEX += 1
                     SELECTED_ROBOT = GEN_ARCHIVE[SELECTED_GEN_INDEX][SELECTED_ROB_INDEX]
+            elif parent1Button.isOver(pos):
+                if not RUNNING and SELECTED_ROBOT is not None:
+                    if SELECTED_GEN_INDEX - 1 >= 0:
+                        SELECTED_GEN_INDEX -= 1
+                        SELECTED_ROBOT = SELECTED_ROBOT.parents[0]
+            elif parent2Button.isOver(pos):
+                if not RUNNING and SELECTED_ROBOT is not None:
+                    if SELECTED_GEN_INDEX - 1 >= 0:
+                        SELECTED_GEN_INDEX -= 1
+                        SELECTED_ROBOT = SELECTED_ROBOT.parents[1]
 
     WINDOW.fill(COLOR_CREAM)
 
@@ -97,6 +109,8 @@ while True:
 
     if not RUNNING and SELECTED_ROBOT is not None:
         cycleButton.draw(COLOR_BLACK)
+        parent1Button.draw(COLOR_BLACK)
+        parent2Button.draw(COLOR_BLACK)
         drawMatrix(SELECTED_ROBOT.progressMap, 1050, 30, 10)
 
     py.display.flip()
