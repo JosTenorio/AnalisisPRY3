@@ -73,6 +73,10 @@ def drawMatrix(matrix, posX, posY, square):
             if matrix[row, col] == 5:
                 py.draw.rect(WINDOW, COLOR_PURPLE, (col * square + posX, row * square + posY, square, square))
 
+def drawText(text, textSize, posX, posY):
+    font = py.font.SysFont(FONT, textSize)
+    text = font.render(text, 1, (0, 0, 0))
+    WINDOW.blit(text, (posX, posY))
 
 def plot(xAxis, yAxis, color):
     ax.plot(xAxis, yAxis, color=color)

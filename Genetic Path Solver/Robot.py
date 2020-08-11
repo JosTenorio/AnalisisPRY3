@@ -111,6 +111,14 @@ class Robot(threading.Thread):
             return [direction + (self.battery * 10) + (self.motor * 100) + (terrain * 1000)]
         return None
 
+    def getInfoHardware(self):
+        string = "Motor: " + str(self.motor) + " Battery: " + str(self.battery) + " Remaining: " + str(self.batteryLeft) + " Camera: " + str(self.camera)
+        return string
+
+    def getInfoAdaptability(self):
+        string = "Moves: " + str(self.moves) + " Cost: " + str(self.cost) + " Adaptability " + str(round(self.adaptability, 2))
+        return string
+
     def printInfo(self):
         print(self.progressMap)
         print("Motor:", self.motor, "Battery:", self.battery, "Remaining:", self.batteryLeft, "Camera:", self.camera)
