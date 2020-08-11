@@ -78,6 +78,12 @@ while True:
                     if SELECTED_GEN_INDEX - 1 >= 0:
                         SELECTED_GEN_INDEX -= 1
                         SELECTED_ROBOT = SELECTED_ROBOT.parents[1]
+            elif childButton.isOver(pos):
+                if not RUNNING and SELECTED_ROBOT is not None:
+                    if SELECTED_GEN_INDEX + 1 < len(GEN_ARCHIVE):
+                        if SELECTED_ROB_INDEX < len(GEN_ARCHIVE[SELECTED_GEN_INDEX + 1]):
+                            SELECTED_GEN_INDEX += 1
+                            SELECTED_ROBOT = GEN_ARCHIVE[SELECTED_GEN_INDEX][SELECTED_ROB_INDEX]
 
     WINDOW.fill(COLOR_CREAM)
 
@@ -111,6 +117,7 @@ while True:
         drawText(infoHardware2, 20, 1070, 60)
         drawText(infoAdaptability1, 20, 1070, 90)
         drawText(infoAdaptability2, 20, 1070, 120)
+        drawText("Current Gen: " + str(SELECTED_GEN_INDEX + 1), 20, 1070, 150)
 
     py.display.flip()
     CLOCK.tick(60)
