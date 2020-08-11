@@ -27,7 +27,7 @@ class Robot(threading.Thread):
         self.batteryLeft = (battery * BATTERY_PER_UNIT)
         self.cost = (battery * COST_PER_HARDWARE) + (motor * COST_PER_HARDWARE) + (camera * COST_PER_HARDWARE)
         self.progressMap = np.copy(MAP)
-        self.progressMap[self.position[0], self.position[1]] = 5
+        self.progressMap[self.position[0], self.position[1]] = 4
         self.currentNode = self.getNodeCode(self.position[0], self.position[1], 4)
         self.adaptability = 0.0
         self.relativeAdaptability = 0.0
@@ -41,15 +41,17 @@ class Robot(threading.Thread):
         if movementCost > self.batteryLeft:
             self.batteryLeft = 0
             self.isRunning = False
+            self.progressMap[self.position[0], self.position[1]] = 5
         else:
             self.batteryLeft -= movementCost
             self.position[0] += moveRow
             self.position[1] += moveCol
             self.moves += 1
             self.currentNode = newNode
-            self.progressMap[self.position[0], self.position[1]] = 5
+            self.progressMap[self.position[0], self.position[1]] = 4
             if self.batteryLeft == 0 or (self.position[0] == 0 and self.position[1] == SIZE - 1):
                 self.isRunning = False
+                self.progressMap[self.position[0], self.position[1]] = 5
 
     def run(self):
         while self.isRunning:
@@ -110,7 +112,6 @@ class Robot(threading.Thread):
         return None
 
     def printInfo(self):
-        self.progressMap[self.position[0], self.position[1]] = 6
         print(self.progressMap)
         print("Motor:", self.motor, "Battery:", self.battery, "Remaining:", self.batteryLeft, "Camera:", self.camera)
         print("Moves:", self.moves, "Cost:", self.cost, "Adaptability:", self.adaptability, "Relative:", self.relativeAdaptability)
