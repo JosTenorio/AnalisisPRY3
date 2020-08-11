@@ -21,23 +21,7 @@ def pathSolver():
     SELECTED_GEN_INDEX = GEN_COUNT - 1
     SELECTED_ROBOT = GEN_ARCHIVE[SELECTED_GEN_INDEX][SELECTED_ROB_INDEX]
 
-def start():
-    global GEN_COUNT, GEN_ARCHIVE, GEN_NUMBERS, ADAPTABILITY_ARCHIVE, GRAPH, RUNNING, SELECTED_ROB_INDEX, SELECTED_GEN_INDEX, SELECTED_ROBOT
-    GEN_COUNT = 0
-    GEN_ARCHIVE = []
-    GEN_NUMBERS = []
-    ADAPTABILITY_ARCHIVE = []
-    GRAPH = None
-    SELECTED_ROB_INDEX = 0
-    SELECTED_GEN_INDEX = 0
-    SELECTED_ROBOT = None
-    RUNNING = True
-    solverThread.start()
-
 # Globals
-INITIAL_POPULATION = 50
-MUTATION_PROBABILITY_HARDWARE = 0.0
-MUTATION_PROBABILITY_BEHAVIOUR = 0.0
 GEN_COUNT = 0
 GEN_ARCHIVE = []
 GEN_NUMBERS = []
@@ -48,15 +32,21 @@ SELECTED_GEN_INDEX = 0
 SELECTED_ROBOT = None
 RUNNING = True
 
+# parameters
+INITIAL_POPULATION = 50
+MUTATION_PROBABILITY_HARDWARE = 0.0
+MUTATION_PROBABILITY_BEHAVIOUR = 0.0
+
 # thread setup
 solverThread = threading.Thread(target = pathSolver, daemon = True)
 
 # buttons
 startButton = Button(COLOR_BROWN, 250, 30, 80, 40, 20, "START")
 stopButton = Button(COLOR_BROWN, 250, 90, 80, 40, 20, "STOP")
-cycleButton = Button(COLOR_BROWN, 850, 40, 180, 40, 20, "CYCLE GENERATION")
-parent1Button = Button(COLOR_BROWN, 850, 100, 180, 40, 20, "PARENT 1")
-parent2Button = Button(COLOR_BROWN, 850, 160, 180, 40, 20, "PARENT 2")
+cycleButton = Button(COLOR_BROWN, 650, 15, 180, 40, 20, "CYCLE GENERATION")
+parent1Button = Button(COLOR_BROWN, 650, 75, 180, 40, 20, "PARENT 1")
+parent2Button = Button(COLOR_BROWN, 650, 135, 180, 40, 20, "PARENT 2")
+childButton = Button(COLOR_BROWN, 650, 195, 180, 40, 20, "CHILD")
 
 while True:
 
@@ -68,7 +58,7 @@ while True:
         if event.type == py.MOUSEBUTTONDOWN:
             pos = py.mouse.get_pos()
             if startButton.isOver(pos):
-                start()
+                solverThread.start()
             elif stopButton.isOver(pos):
                 RUNNING = False
             elif cycleButton.isOver(pos):
@@ -111,7 +101,16 @@ while True:
         cycleButton.draw(COLOR_BLACK)
         parent1Button.draw(COLOR_BLACK)
         parent2Button.draw(COLOR_BLACK)
-        drawMatrix(SELECTED_ROBOT.progressMap, 1050, 30, 10)
+        childButton.draw(COLOR_BLACK)
+        drawMatrix(SELECTED_ROBOT.progressMap, 850, 30, 10)
+        infoHardware1 = SELECTED_ROBOT.getInfoHardwareSmall1()
+        infoHardware2 = SELECTED_ROBOT.getInfoHardwareSmall2()
+        infoAdaptability1 = SELECTED_ROBOT.getInfoAdaptabilitySmall1()
+        infoAdaptability2 = SELECTED_ROBOT.getInfoAdaptabilitySmall2()
+        drawText(infoHardware1, 20, 1070, 30)
+        drawText(infoHardware2, 20, 1070, 60)
+        drawText(infoAdaptability1, 20, 1070, 90)
+        drawText(infoAdaptability2, 20, 1070, 120)
 
     py.display.flip()
     CLOCK.tick(60)

@@ -128,3 +128,19 @@ class Robot(threading.Thread):
     def printMarkovChain(self):
         pp.pprint(self.behaviour)
         print()
+
+    def getInfoHardwareSmall1(self):
+        string = "Motor: " + str(self.motor) + " Battery: " + str(self.battery)
+        return string
+
+    def getInfoHardwareSmall2(self):
+        string = "Remaining: " + str(self.batteryLeft) + " Camera: " + str(self.camera)
+        return string
+
+    def getInfoAdaptabilitySmall1(self):
+        string = "Moves: " + str(self.moves) + " Cost: " + str(self.cost)
+        return string
+
+    def getInfoAdaptabilitySmall2(self):
+        string = "Adaptability " + str(round(self.adaptability, 2))
+        return string
